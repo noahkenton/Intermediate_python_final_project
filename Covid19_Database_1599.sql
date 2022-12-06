@@ -314,6 +314,7 @@ INSERT into Treatments_used_by_patient(Treatments_used_by_patient_id, fk_patient
 ('9','10','3'),
 ('10','5','1');
 
+drop table if exists mask_use cascade;
 CREATE TABLE MASK_USE(
 MASK_USE_ID INT NOT NULL PRIMARY KEY,
 MASK_TYPE VARCHAR(20) NOT NULL,
@@ -327,6 +328,7 @@ INSERT INTO MASK_USE (MASK_USE_ID,MASK_TYPE, USAGE_FREQUENCY) VALUES
 (4, 'Surgical', 'always'),
 (5, 'N95', 'rare');
 
+drop table if exists patient_mask_use;
 CREATE TABLE PATIENT_MASK_USE(
 patient_mask_use_id int not null primary key,
 fk_patient_id int not null,
@@ -342,6 +344,7 @@ INSERT INTO PATIENT_MASK_USE (PATIENT_MASK_USE_ID,FK_PATIENT_ID, FK_MASK_ID) VAL
 (4, 4, 4),
 (5, 1, 2);
 
+drop table if exists recent_travel;
 CREATE TABLE RECENT_TRAVEL (
 recent_travel_id int not null primary key,
 travel_destination varchar(50) not null,
@@ -355,6 +358,7 @@ INSERT INTO RECENT_TRAVEL(recent_travel_id, travel_destination, exposure_intensi
 (4, 'Myrtle Beach', 'High'),
 (5, 'Ocean City', 'High');
 
+drop table if exists patient_recent_travel cascade;
 CREATE TABLE PATIENT_RECENT_TRAVEL(
 patient_recent_travel_id int not null primary key,
 fk_patient_id int not null,
@@ -370,4 +374,31 @@ INSERT INTO PATIENT_RECENT_TRAVEL(patient_recent_travel_id, fk_patient_id, fk_re
 (4, 2, 3),
 (5, 4, 1);
 
+START TRANSACTION; 
+DELETE FROM PATIENT_RECENT_TRAVEL WHERE FK_RECENT_TRAVEL = 5;
+#SELECT * FROM PATIENT_RECENT_TRAVEL;
+ROLLBACK;
+#SELECT * FROM PATIENT_RECENT_TRAVEL;
+
+DROP VIEW IF EXISTS FREQUENCE_OF_COUGH_WITHIN_PATIENTS CASCADE;
+CREATE VIEW FREQUENCE_OF_COUGH_WITHIN_PATIENTS 
+AS SELECT COUNT(*) AS FREQUENCE_OF_COUGH_WITHIN_PATIENTS 
+FROM PATIENT_SYMPTOMS 
+WHERE FK_SYMPTOMS_ID = 1;
+
+DROP VIEW IF EXISTS PREVIOUS_HEALTH_HISTORY CASCADE;
+CREATE VIEW PREVIOUS_HEALTH_HISTORY AS
+SELECT Patient.patient_name as 'Patient Name' ,Patient.age as 'Age', previous_health_issues.health_issue_name as 'Health Issue Name'
+FROM (patient_previous_health_issues
+INNER JOIN Patient ON patient_previous_health_issues.fk_Patient_id = Patient.patient_id
+INNER JOIN previous_health_issues ON patient_previous_health_issues.fk_previous_health_issues_id = previous_health_issues.health_issues_id)
+ORDER BY patient_name;
+
+DROP VIEW IF EXISTS SYMPTOMS_EXPERIENCED CASCADE;
+CREATE VIEW SYMPTOMS_EXPERIENCED AS
+SELECT patient_symptoms.patient_symptoms_id as 'Id', Patient.patient_name as 'Patient Name',Patient.age as 'Age', Symptoms.symptom_name as 'Symptom Name'
+FROM (patient_symptoms
+INNER JOIN Patient ON patient_symptoms.fk_Patient_id = Patient.patient_id
+INNER JOIN Symptoms ON patient_symptoms.fk_symptoms_id = Symptoms.symptoms_id)
+ORDER BY patient.age;
 
