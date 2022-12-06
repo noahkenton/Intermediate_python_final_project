@@ -313,3 +313,59 @@ INSERT into Treatments_used_by_patient(Treatments_used_by_patient_id, fk_patient
 ('8','10','2'),
 ('9','10','3'),
 ('10','5','1');
+
+CREATE TABLE MASK_USE(
+MASK_USE_ID INT NOT NULL PRIMARY KEY,
+MASK_TYPE VARCHAR(20) NOT NULL,
+USAGE_FREQUENCY VARCHAR(20) NOT NULL
+);
+
+INSERT INTO MASK_USE (MASK_USE_ID,MASK_TYPE, USAGE_FREQUENCY) VALUES
+(1, 'Cloth', 'rare'),
+(2, 'Cloth', 'always'),
+(3, 'Surgical', 'sometimes'),
+(4, 'Surgical', 'always'),
+(5, 'N95', 'rare');
+
+CREATE TABLE PATIENT_MASK_USE(
+patient_mask_use_id int not null primary key,
+fk_patient_id int not null,
+fk_mask_id int not null,
+FOREIGN KEY(fk_patient_id) references PATIENT(patient_id),
+FOREIGN KEY(fk_mask_id) references MASK_USE(mask_use_id)
+);
+
+INSERT INTO PATIENT_MASK_USE (PATIENT_MASK_USE_ID,FK_PATIENT_ID, FK_MASK_ID) VALUES
+(1, 5, 5),
+(2, 1, 3),
+(3, 3, 1),
+(4, 4, 4),
+(5, 1, 2);
+
+CREATE TABLE RECENT_TRAVEL (
+recent_travel_id int not null primary key,
+travel_destination varchar(50) not null,
+exposure_intensity varchar(50) not null
+);
+
+INSERT INTO RECENT_TRAVEL(recent_travel_id, travel_destination, exposure_intensity) values
+(1, 'India', 'Medium'),
+(2, 'Mexico', 'Low'),
+(3, 'Bahamas', 'Medium'),
+(4, 'Myrtle Beach', 'High'),
+(5, 'Ocean City', 'High');
+
+CREATE TABLE PATIENT_RECENT_TRAVEL(
+patient_recent_travel_id int not null primary key,
+fk_patient_id int not null,
+fk_recent_travel int not null
+);
+
+INSERT INTO PATIENT_RECENT_TRAVEL(patient_recent_travel_id, fk_patient_id, fk_recent_travel) values
+(1, 1, 4),
+(2, 1, 5),
+(3, 6, 2),
+(4, 2, 3),
+(5, 4, 1);
+
+
