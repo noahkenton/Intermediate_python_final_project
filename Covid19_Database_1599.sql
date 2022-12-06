@@ -358,7 +358,9 @@ INSERT INTO RECENT_TRAVEL(recent_travel_id, travel_destination, exposure_intensi
 CREATE TABLE PATIENT_RECENT_TRAVEL(
 patient_recent_travel_id int not null primary key,
 fk_patient_id int not null,
-fk_recent_travel int not null
+fk_recent_travel int not null,
+foreign key(fk_patient_id) references patient(patient_id),
+foreign key(fk_recent_travel) references recent_travel(recent_travel_id)
 );
 
 INSERT INTO PATIENT_RECENT_TRAVEL(patient_recent_travel_id, fk_patient_id, fk_recent_travel) values
