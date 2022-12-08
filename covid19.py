@@ -48,10 +48,10 @@ class Country:
         else:
             # Get
             self.__country_id = country_id
+            config = Config()
+            con = config.db_conn
 
             try:
-                config = Config()
-                con = config.db_conn
                 with con.cursor() as cur:
                     qry = "SELECT * FROM country WHERE country_id = '" + country_id + "'"
                     print(qry)
@@ -720,7 +720,7 @@ class Treatments:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO TREATMENTS (treatment_name, treatment_functionality)'
+                    qry = 'INSERT INTO Treatments (treatment_name, treatment_functionality)'
                     qry = qry + 'VALUES(%s, %s)'
                     print(qry)
                     cur.execute(qry, (self.__treatment_name, self.__treatment_functionality))
@@ -734,7 +734,7 @@ class Treatments:
                 config = Config()
                 con = config.db_conn
                 with con.cursor() as cur:
-                    qry = "SELECT * FROM TREATMENTS  WHERE treatments_used_id = '" + treatments_used_id + "'"
+                    qry = "SELECT * FROM Treatments WHERE treatments_used_id = '" + treatments_used_id + "'"
                     print(qry)
                     cur.execute(qry)
                     rows = cur.fetchall()
@@ -754,7 +754,7 @@ class Treatments:
             config = Config()
             con = config.db_conn
             with con.cursor() as cur:
-                qry = 'UPDATE TREATMENTS SET treatment_name = %s WHERE treatments_used_id = %s;'
+                qry = 'UPDATE Treatments SET treatment_name = %s WHERE treatments_used_id = %s;'
                 print(qry)
                 cur.execute(qry, (self.__treatment_name, self.__treatments_used_id))
                 con.commit()
@@ -770,7 +770,7 @@ class Treatments:
             config = Config()
             con = config.db_conn
             with con.cursor() as cur:
-                qry = 'UPDATE TREATMENTS SET treatment_functionality = %s WHERE treatments_used_id = %s;'
+                qry = 'UPDATE Treatments SET treatment_functionality = %s WHERE treatments_used_id = %s;'
                 print(qry)
                 cur.execute(qry, (self.__treatment_functionality, self.__treatments_used_id))
                 con.commit()
@@ -823,9 +823,9 @@ class TreatmentsUsedByPatient:
                     cur.execute(qry)
                     rows = cur.fetchall()
                     for row in rows:
-                        self.__treatments_used_id = row["Treatments_used_by_patient_id"]
+                        self.__treatments_used_by_patient_id = row["Treatments_used_by_patient_id"]
                         self.__fk_patient_id = row["fk_patient_id"]
-                        self.__fk_treatments_used_id = row["fk_treatments_used_id"]
+                        self.__fk_treatments_used_id = row["fk_Treatments_used_id"]
             finally:
                 con.close()
 

@@ -1,12 +1,12 @@
 -- -----------------------------------------------------------------------
 # Creates Database
 -- -----------------------------------------------------------------------
-CREATE DATABASE COVID19_DATABASE_1599;
+CREATE DATABASE sot18;
 
 -- -----------------------------------------------------------------------
 # Uses Database
 -- -----------------------------------------------------------------------
-USE COVID19_DATABASE_1599;
+USE sot18;
 
 
 -- ------------------------------------------------------------------------
@@ -40,7 +40,7 @@ INSERT into country (country_id,country_name) VALUES
   FOREIGN KEY (`location_id`)
   REFERENCES `country` (`country_id`));
   
-INSERT into locationz (location_id,location_name,location_state,fk_country_id) values 
+INSERT into LOCATIONZ (location_id,location_name,location_state,fk_country_id) values 
 ('1','Allegheny','Pittsburgh','1'),
 ('2','Brugg','Argau','9'),
 ('3','Rome', 'Lazio','4'),
@@ -107,13 +107,13 @@ CREATE TABLE Patient(
   PRIMARY KEY (`patient_id`),
   CONSTRAINT `fdhjahd`
     FOREIGN KEY (`patient_id`)
-    REFERENCES `locationz` (`location_id`),
+    REFERENCES `LOCATIONZ` (`location_id`),
     CONSTRAINT`JHDFJHS`
     FOREIGN KEY (`patient_id`)
     REFERENCES `month_affected` (`month_affected_id`),
     constraint `ghjgj`
     FOREIGN KEY(`PATIENT_ID`)
-    REFERENCES `DURATION` (`DURATION_ID`));
+    REFERENCES `duration` (`DURATION_ID`));
     
   
 INSERT into Patient (patient_id,patient_name, Age,fk_month_affected_id,fk_location_id, fk_duration_id ) values 
@@ -164,10 +164,10 @@ INSERT into Patient (patient_id,patient_name, Age,fk_month_affected_id,fk_locati
   INDEX `hjhj_idx` (`fk_symptoms_id` ASC) VISIBLE,
   CONSTRAINT `gjhj`
     FOREIGN KEY (`fk_patient_id`)
-    REFERENCES `patient` (`patient_id`),
+    REFERENCES `Patient` (`patient_id`),
   CONSTRAINT `hjhj`
     FOREIGN KEY (`fk_symptoms_id`)
-    REFERENCES `symptoms` (`symptoms_id`));
+    REFERENCES `SYMPTOMS` (`symptoms_id`));
   
    INSERT into PATIENT_SYMPTOMS (patient_symptoms_id, fk_patient_id, fk_symptoms_id) values
    ('1','2','1'),
@@ -246,7 +246,7 @@ fk_previous_health_issues_id INT NOT NULL,
   INDEX `hjhjk_idx` (`fk_previous_health_issues_id` ASC) VISIBLE,
   CONSTRAINT `gjhjl`
     FOREIGN KEY (`fk_patient_id`)
-    REFERENCES `patient` (`patient_id`),
+    REFERENCES `Patient` (`patient_id`),
   CONSTRAINT `hjhjk`
     FOREIGN KEY (`fk_previous_health_issues_id`)
     REFERENCES `previous_health_issues` (`health_issues_id`));
@@ -297,7 +297,7 @@ INDEX `gjhjlas_idx` (`fk_patient_id` ASC) VISIBLE,
   INDEX `hjhjkas_idx` (`fk_Treatments_used_id` ASC) VISIBLE,
   CONSTRAINT `gjhjlas`
     FOREIGN KEY (`fk_patient_id`)
-    REFERENCES `patient` (`patient_id`),
+    REFERENCES `Patient` (`patient_id`),
   CONSTRAINT `hjhjkas`
     FOREIGN KEY (`fk_Treatments_used_id`)
     REFERENCES `Treatments` (`treatments_used_id`));
@@ -333,7 +333,7 @@ CREATE TABLE PATIENT_MASK_USE(
 patient_mask_use_id int not null primary key,
 fk_patient_id int not null,
 fk_mask_id int not null,
-FOREIGN KEY(fk_patient_id) references PATIENT(patient_id),
+FOREIGN KEY(fk_patient_id) references Patient(patient_id),
 FOREIGN KEY(fk_mask_id) references MASK_USE(mask_use_id)
 );
 
@@ -363,8 +363,8 @@ CREATE TABLE PATIENT_RECENT_TRAVEL(
 patient_recent_travel_id int not null primary key,
 fk_patient_id int not null,
 fk_recent_travel int not null,
-foreign key(fk_patient_id) references patient(patient_id),
-foreign key(fk_recent_travel) references recent_travel(recent_travel_id)
+foreign key(fk_patient_id) references Patient(patient_id),
+foreign key(fk_recent_travel) references RECENT_TRAVEL(recent_travel_id)
 );
 
 INSERT INTO PATIENT_RECENT_TRAVEL(patient_recent_travel_id, fk_patient_id, fk_recent_travel) values
@@ -396,9 +396,9 @@ ORDER BY patient_name;
 
 DROP VIEW IF EXISTS SYMPTOMS_EXPERIENCED CASCADE;
 CREATE VIEW SYMPTOMS_EXPERIENCED AS
-SELECT patient_symptoms.patient_symptoms_id as 'Id', Patient.patient_name as 'Patient Name',Patient.age as 'Age', Symptoms.symptom_name as 'Symptom Name'
-FROM (patient_symptoms
-INNER JOIN Patient ON patient_symptoms.fk_Patient_id = Patient.patient_id
-INNER JOIN Symptoms ON patient_symptoms.fk_symptoms_id = Symptoms.symptoms_id)
-ORDER BY patient.age;
+SELECT PATIENT_SYMPTOMS.patient_symptoms_id as 'Id', Patient.patient_name as 'Patient Name',Patient.age as 'Age', SYMPTOMS.symptom_name as 'Symptom Name'
+FROM (PATIENT_SYMPTOMS
+INNER JOIN Patient ON PATIENT_SYMPTOMS.fk_Patient_id = Patient.patient_id
+INNER JOIN SYMPTOMS ON PATIENT_SYMPTOMS.fk_symptoms_id = SYMPTOMS.symptoms_id)
+ORDER BY Patient.age;
 
