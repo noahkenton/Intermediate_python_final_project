@@ -1,6 +1,7 @@
 import pymysql
 from flask import Flask
 import json
+import unittest
 
 
 class Config:
@@ -30,7 +31,6 @@ class Country:
         self.__country_name = country_name
 
         if country_id == "":
-            # self.__country_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -38,10 +38,10 @@ class Country:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO country (country_id, country_name)'
-                    qry = qry + 'VALUES(%s, %s)'
+                    qry = 'INSERT INTO country (country_name)'
+                    qry = qry + 'VALUES( %s)'
                     print(qry)
-                    cur.execute(qry, (self.__country_id, self.__country_name))
+                    cur.execute(qry, self.__country_name)
                     con.commit()
             finally:
                 con.close()
@@ -81,6 +81,9 @@ class Country:
         finally:
             pass
 
+    def get_id(self):
+        return self.__country_id
+
     def to_json(self):
         fields_data = {
             "country_id": self.__country_id,
@@ -95,7 +98,6 @@ class Locationz:
         self.__location_state = location_state
         self.__fk_country_id = fk_country_id
         if location_id == "":
-            # self.__location_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -103,11 +105,10 @@ class Locationz:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO LOCATIONZ (location_id, location_name, location_state, fk_country_id)'
-                    qry = qry + 'VALUES(%s, %s, %s, %s)'
+                    qry = 'INSERT INTO LOCATIONZ (location_name, location_state, fk_country_id)'
+                    qry = qry + 'VALUES(%s, %s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__location_id, self.__location_name,
-                                      self.__location_state, self.__fk_country_id))
+                    cur.execute(qry, (self.__location_name, self.__location_state, self.__fk_country_id))
                     con.commit()
             finally:
                 pass
@@ -183,6 +184,9 @@ class Locationz:
         finally:
             pass
 
+    def get_id(self):
+        return self.__location_id
+
     def to_json(self):
         fields_data = {
             "location_id": self.__location_id,
@@ -205,10 +209,10 @@ class Duration:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO duration (duration_id, duration_length_in_days)'
-                    qry = qry + 'VALUES(%s, %s)'
+                    qry = 'INSERT INTO duration (duration_length_in_days)'
+                    qry = qry + 'VALUES(%s)'
                     print(qry)
-                    cur.execute(qry, (self.__duration_id, self.__duration_length_in_days))
+                    cur.execute(qry, self.__duration_length_in_days)
                     con.commit()
             finally:
                 pass
@@ -246,6 +250,9 @@ class Duration:
         finally:
             pass
 
+    def get_id(self):
+        return self.__duration_id
+
     def to_json(self):
         fields_data = {
             "duration_id": self.__duration_id,
@@ -260,7 +267,6 @@ class MonthAffected:
         self.__month_affected = month_affected
         self.__year_affected = year_affected
         if month_affected_id == "":
-            # self.__doctor_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -268,11 +274,10 @@ class MonthAffected:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO month_affected (month_affected_id, Month_affected, year_affected)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO month_affected (Month_affected, year_affected)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__month_affected_id, self.__month_affected,
-                                      self.__year_affected))
+                    cur.execute(qry, (self.__month_affected, self.__year_affected))
                     con.commit()
             finally:
                 pass
@@ -328,6 +333,9 @@ class MonthAffected:
         finally:
             pass
 
+    def get_id(self):
+        return self.__month_affected_id
+
     def to_json(self):
         fields_data = {
             "month_affected_id": self.__month_affected_id,
@@ -355,11 +363,11 @@ class Patient:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO Patient (patient_id, patient_name, Age, fk_month_affected_id, ' \
+                    qry = 'INSERT INTO Patient (patient_name, Age, fk_month_affected_id, ' \
                           'fk_location_id, fk_duration_id)'
-                    qry = qry + 'VALUES(%s, %s, %s, %s, %s, %s)'
+                    qry = qry + 'VALUES(%s, %s, %s, %s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__patient_id, self.__patient_name, self.__age, self.__fk_month_affected_id,
+                    cur.execute(qry, (self.__patient_name, self.__age, self.__fk_month_affected_id,
                                       self.__fk_location_id, self.__fk_duration_id))
                     con.commit()
             finally:
@@ -465,6 +473,9 @@ class Patient:
         finally:
             pass
 
+    def get_id(self):
+        return self.__patient_id
+
     def to_json(self):
         fields_data = {
              "patient_id": self.__patient_id,
@@ -490,10 +501,10 @@ class Symptoms:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO SYMPTOMS (symptoms_id, symptom_name)'
-                    qry = qry + 'VALUES(%s, %s)'
+                    qry = 'INSERT INTO SYMPTOMS (symptom_name)'
+                    qry = qry + 'VALUES(%s)'
                     print(qry)
-                    cur.execute(qry, (self.__symptoms_id, self.__symptom_name))
+                    cur.execute(qry, self.__symptom_name)
                     con.commit()
             finally:
                 pass
@@ -530,6 +541,9 @@ class Symptoms:
         finally:
             pass
 
+    def get_id(self):
+        return self.__symptoms_id
+
     def to_json(self):
         fields_data = {
              "symptoms_id": self.__symptoms_id,
@@ -543,7 +557,6 @@ class PreviousHealthIssues:
         self.__health_issues_id = health_issues_id
         self.__health_issue_name = health_issue_name
         if health_issues_id == "":
-            # self.__patient_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -551,10 +564,10 @@ class PreviousHealthIssues:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO previous_health_issues (health_issues_id, health_issue_name)'
-                    qry = qry + 'VALUES(%s, %s)'
+                    qry = 'INSERT INTO previous_health_issues (health_issue_name)'
+                    qry = qry + 'VALUES(%s)'
                     print(qry)
-                    cur.execute(qry, (self.__health_issues_id, self.__health_issue_name))
+                    cur.execute(qry, self.__health_issue_name)
                     con.commit()
             finally:
                 pass
@@ -594,6 +607,9 @@ class PreviousHealthIssues:
         finally:
             pass
 
+    def get_id(self):
+        return self.__health_issues_id
+
     def to_json(self):
         fields_data = {
             "health_issues_id": self.__health_issues_id,
@@ -608,7 +624,6 @@ class PatientPreviousHealthIssues:
         self.__fk_patient_id = fk_patient_id
         self.__fk_previous_health_issues_id = fk_previous_health_issues_id
         if patient_previous_health_issues_id == "":
-            # self.__patient_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -616,12 +631,10 @@ class PatientPreviousHealthIssues:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO previous_health_issues (patient_previous_health_issues_id, fk_patient_id,' \
-                          'fk_previous_health_issues_id)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO previous_health_issues (fk_patient_id, fk_previous_health_issues_id)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__patient_previous_health_issues_id, self.__fk_patient_id,
-                                      self.__fk_previous_health_issues_id))
+                    cur.execute(qry, (self.__fk_patient_id, self.__fk_previous_health_issues_id))
                     con.commit()
             finally:
                 pass
@@ -681,6 +694,9 @@ class PatientPreviousHealthIssues:
         finally:
             pass
 
+    def get_id(self):
+        return self.__patient_previous_health_issues_id
+
     def to_json(self):
         fields_data = {
             "patient_previous_health_issues_id": self.__patient_previous_health_issues_id,
@@ -704,10 +720,10 @@ class Treatments:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO TREATMENTS (treatments_used_id, treatment_name, treatment_functionality)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO TREATMENTS (treatment_name, treatment_functionality)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__treatments_used_id, self.__treatment_name, self.__treatment_functionality))
+                    cur.execute(qry, (self.__treatment_name, self.__treatment_functionality))
                     con.commit()
             finally:
                 pass
@@ -761,6 +777,9 @@ class Treatments:
         finally:
             pass
 
+    def get_id(self):
+        return self.__treatments_used_id
+
     def to_json(self):
         fields_data = {
             "treatments_used_id": self.__treatments_used_id,
@@ -784,13 +803,10 @@ class TreatmentsUsedByPatient:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO Treatments_used_by_patient (Treatments_used_by_patient_id, fk_patient_id,' \
-                          ' fk_treatments_used_id)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO Treatments_used_by_patient (fk_patient_id, fk_treatments_used_id)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__treatments_used_by_patient_id,
-                                      self.__fk_patient_id,
-                                      self.__fk_treatments_used_id))
+                    cur.execute(qry, (self.__fk_patient_id, self.__fk_treatments_used_id))
                     con.commit()
             finally:
                 pass
@@ -847,6 +863,9 @@ class TreatmentsUsedByPatient:
         finally:
             pass
 
+    def get_id(self):
+        return self.__treatments_used_by_patient_id
+
     def to_json(self):
         fields_data = {
             "treatments_used_by_patient_id": self.__treatments_used_by_patient_id,
@@ -857,12 +876,10 @@ class TreatmentsUsedByPatient:
 
 
 class MaskUse:
-    def __int__(self, mask_use_id='', mask_type='', usage_frequency=''):
-        self.__mask_use_id = mask_use_id
+    def __init__(self, mask_use_id='', mask_type='', usage_frequency=''):
         self.__mask_type = mask_type
         self.__usage_frequency = usage_frequency
         if mask_use_id == "":
-            # self.__mask_use_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -870,10 +887,10 @@ class MaskUse:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO MASK_USE (MASK_USE_ID, MASK_TYPE, USAGE_FREQUENCY)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO MASK_USE (MASK_TYPE, USAGE_FREQUENCY)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__mask_use_id, self.__mask_type, self.__usage_frequency))
+                    cur.execute(qry, (self.__mask_type, self.__usage_frequency))
                     con.commit()
             finally:
                 pass
@@ -884,8 +901,7 @@ class MaskUse:
                 config = Config()
                 con = config.db_conn
                 with con.cursor() as cur:
-                    qry = "SELECT * FROM MASK_USE  WHERE MASK_USE_ID = '" \
-                          + mask_use_id + "'"
+                    qry = "SELECT * FROM MASK_USE WHERE MASK_USE_ID = '" + mask_use_id + "'"
                     print(qry)
                     cur.execute(qry)
                     rows = cur.fetchall()
@@ -928,6 +944,9 @@ class MaskUse:
         finally:
             pass
 
+    def get_id(self):
+        return self.__mask_use_id
+
     def to_json(self):
         fields_data = {
             "mask_use_id": self.__mask_use_id,
@@ -938,8 +957,7 @@ class MaskUse:
 
 
 class PatientMaskUse:
-    def __int__(self, patient_mask_use_id='', fk_patient_id='', fk_mask_id=''):
-        self.__patient_mask_use_id = patient_mask_use_id
+    def __init__(self, patient_mask_use_id='', fk_patient_id='', fk_mask_id=''):
         self.__fk_patient_id = fk_patient_id
         self.__fk_mask_id = fk_mask_id
         if patient_mask_use_id == "":
@@ -951,10 +969,10 @@ class PatientMaskUse:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO PATIENT_MASK_USE (patient_mask_use_id, fk_patient_id, fk_mask_id)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO PATIENT_MASK_USE (fk_patient_id, fk_mask_id)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__patient_mask_use_id, self.__fk_patient_id, self.__fk_mask_id))
+                    cur.execute(qry, (self.__fk_patient_id, self.__fk_mask_id))
                     con.commit()
             finally:
                 pass
@@ -1008,6 +1026,9 @@ class PatientMaskUse:
         finally:
             pass
 
+    def get_id(self):
+        return self.__patient_mask_use_id
+
     def to_json(self):
         fields_data = {
             "patient_mask_use_id": self.__patient_mask_use_id,
@@ -1023,7 +1044,6 @@ class RecentTravel:
         self.__travel_destination = travel_destination
         self.__exposure_intensity = exposure_intensity
         if recent_travel_id == "":
-            # self.__recent_travel_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -1031,10 +1051,10 @@ class RecentTravel:
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO RECENT_TRAVEL (recent_travel_id, travel_destination, exposure_intensity)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO RECENT_TRAVEL (travel_destination, exposure_intensity)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__recent_travel_id, self.__travel_destination, self.__exposure_intensity))
+                    cur.execute(qry, (self.__travel_destination, self.__exposure_intensity))
                     con.commit()
             finally:
                 pass
@@ -1097,12 +1117,11 @@ class RecentTravel:
         return json.dumps(fields_data)
 
 
-class PatientRecentTravel::
+class PatientRecentTravel:
     def __init__(self, patient_recent_travel_id='', fk_patient_id='', fk_recent_travel=''):
         self.__fk_patient_id = fk_patient_id
         self.__fk_recent_travel = fk_recent_travel
         if patient_recent_travel_id == "":
-            # self.__patient_recent_travel_id = str(uuid.uuid4())
             try:
                 config = Config()
                 con = config.db_conn
@@ -1110,11 +1129,10 @@ class PatientRecentTravel::
                 # parameterize arguments
 
                 with con.cursor() as cur:
-                    qry = 'INSERT INTO PATIENT_RECENT_TRAVEL (patient_recent_travel_id, ' \
-                          'fk_patient_id, fk_recent_travel)'
-                    qry = qry + 'VALUES(%s, %s, %s)'
+                    qry = 'INSERT INTO PATIENT_RECENT_TRAVEL (fk_patient_id, fk_recent_travel)'
+                    qry = qry + 'VALUES(%s, %s)'
                     print(qry)
-                    cur.execute(qry, (self.__patient_recent_travel_id, self.__fk_patient_id, self.__fk_recent_travel))
+                    cur.execute(qry, (self.__fk_patient_id, self.__fk_recent_travel))
                     con.commit()
             finally:
                 pass
@@ -1169,6 +1187,9 @@ class PatientRecentTravel::
         finally:
             pass
 
+    def get_id(self):
+        return self.__patient_recent_travel_id
+
     def to_json(self):
         fields_data = {
             "patient_recent_travel_id": self.__patient_recent_travel_id,
@@ -1180,30 +1201,78 @@ class PatientRecentTravel::
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def index():
-    country = Country()
-    location = Locationz()
-    duration = Duration()
-    month_affected = MonthAffected()
+    country = Country(country_id='1')
+    location = Locationz(location_id='1')
+    duration = Duration(duration_id='1')
+    month_affected = MonthAffected(month_affected_id='1')
     patient = Patient(patient_id='1')
-    symptoms = Symptoms()
-    phi = PreviousHealthIssues()
-    pphi = PatientPreviousHealthIssues()
-    treatments = Treatments()
-    tubp = TreatmentsUsedByPatient()
-    mask_use = MaskUse()
-    pmu = PatientMaskUse()
-    recent_travel = RecentTravel()
-    prt =PatientRecentTravel()
+    symptoms = Symptoms(symptoms_id='1')
+    phi = PreviousHealthIssues(health_issues_id='1')
+    pphi = PatientPreviousHealthIssues(patient_previous_health_issues_id='1')
+    treatments = Treatments(treatments_used_id='1')
+    tubp = TreatmentsUsedByPatient(treatments_used_by_patient_id='1')
+    mask_use = MaskUse(mask_use_id='1')
+    pmu = PatientMaskUse(patient_mask_use_id='1')
+    recent_travel = RecentTravel(recent_travel_id='1')
+    prt = PatientRecentTravel(patient_recent_travel_id='1')
 
-    dict = {
-        "patient": (patient.get_patient_name(), patient.get_age(), patient.get_patient_id),
-        "Doctor": (doc.get_first_name(), doc.get_last_name(), doc.get_doctor_id()),
-        "Visit 1": visit.to_json(),
-        "Visit 2": visit2.to_json()
+    dict_results = {
+        "country": country.to_json(),
+        "location": location.to_json(),
+        "duration": duration.to_json(),
+        "month_affected": month_affected.to_json(),
+        "patient": patient.to_json(),
+        "symptoms": symptoms.to_json(),
+        "phi": phi.to_json(),
+        "pphi": pphi.to_json(),
+        "treatments": treatments.to_json(),
+        "tubp": tubp.to_json(),
+        "mask_use": mask_use.to_json(),
+        "pmu": pmu.to_json(),
+        "recent_travel": recent_travel.to_json(),
+        "prt": prt.to_json()
     }
 
-    return json.dumps(dict)
+    return json.dumps(dict_results)
 
-# app.run()
+
+app.run()
+
+
+class Tester(unittest.TestCase):
+    def update_Patient_name(self):
+        # update last_name value of doctor
+        update1 = Patient(patient_id='4')
+        update2 = Locationz(location_id='2')
+        update3 = RecentTravel(recent_travel_id='3')
+        self.run(update1.set_age('12'))
+        self.run(update2.set_location_name('Rome'))
+        self.run(update3.set_travel_destination('Mexico'))
+
+    def create_duration(self):
+        # create new doctor entry
+        new_entry = Duration(duration_length_in_days="20")
+        new_entry2 = PatientMaskUse(fk_patient_id='3', fk_mask_id='4')
+        new_entry3 = PatientPreviousHealthIssues(fk_patient_id='4', fk_previous_health_issues_id='2')
+        self.run(new_entry)
+        self.run(new_entry2)
+        self.run(new_entry3)
+
+    def delete_row(self, table, id_key, id_value):
+        # delete doctor with given name from doctor table
+        try:
+            config = Config()
+            con = config.db_conn
+            with con.cursor() as cur:
+                qry = f"DELETE * FROM {table} WHERE {id_key} = '" + id_value + "'"
+                print(qry)
+                cur.execute(qry)
+        finally:
+            con.close()
+
+        self.run(self.delete_row(table='country', id_key='country_id', id_value='1'))
+        self.run(self.delete_row(table='Duration', id_key='duration_id', id_value='1'))
+        self.run(self.delete_row(table='treatments', id_key='treatments_used_by_patient_id', id_value='1'))
