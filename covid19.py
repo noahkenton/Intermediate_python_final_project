@@ -81,6 +81,13 @@ class Country:
         finally:
             pass
 
+    def to_json(self):
+        fields_data = {
+            "country_id": self.__country_id,
+            "country_name": self.__country_name
+        }
+        return json.dumps(fields_data)
+
 
 class Locationz:
     def __init__(self, location_id='', location_name='', location_state='', fk_country_id=''):
@@ -176,6 +183,15 @@ class Locationz:
         finally:
             pass
 
+    def to_json(self):
+        fields_data = {
+            "location_id": self.__location_id,
+            "location_name": self.__location_name,
+            "location_state": self.__location_state,
+            "fk_country_id": self.__fk_country_id
+        }
+        return json.dumps(fields_data)
+
 
 class Duration:
     def __init__(self, duration_id='', duration_length_in_days=''):
@@ -229,6 +245,13 @@ class Duration:
                 con.commit()
         finally:
             pass
+
+    def to_json(self):
+        fields_data = {
+            "duration_id": self.__duration_id,
+            "duration_length_in_days": self.__duration_length_in_days
+        }
+        return json.dumps(fields_data)
 
 
 class MonthAffected:
@@ -304,6 +327,14 @@ class MonthAffected:
                 con.commit()
         finally:
             pass
+
+    def to_json(self):
+        fields_data = {
+            "month_affected_id": self.__month_affected_id,
+            "month_affected": self.__month_affected,
+            "year_affected": self.__year_affected
+        }
+        return json.dumps(fields_data)
 
 
 class Patient:
@@ -434,6 +465,17 @@ class Patient:
         finally:
             pass
 
+    def to_json(self):
+        fields_data = {
+             "patient_id": self.__patient_id,
+             "patient_name": self.__patient_name,
+             "Age": self.__age,
+             "fk_month_affected_id": self.__fk_month_affected_id,
+             "fk_location_id": self.__fk_location_id,
+             "fk_duration_id": self.__fk_duration_id
+        }
+        return json.dumps(fields_data)
+
 
 class Symptoms:
     def __init__(self, symptoms_id='', symptom_name=''):
@@ -487,6 +529,13 @@ class Symptoms:
                 con.commit()
         finally:
             pass
+
+    def to_json(self):
+        fields_data = {
+             "symptoms_id": self.__symptoms_id,
+             "symptom_name": self.__symptom_name
+        }
+        return json.dumps(fields_data)
 
 
 class PreviousHealthIssues:
@@ -544,6 +593,13 @@ class PreviousHealthIssues:
                 con.commit()
         finally:
             pass
+
+    def to_json(self):
+        fields_data = {
+            "health_issues_id": self.__health_issues_id,
+            "health_issue_name": self.__health_issue_name
+        }
+        return json.dumps(fields_data)
 
 
 class PatientPreviousHealthIssues:
@@ -625,6 +681,14 @@ class PatientPreviousHealthIssues:
         finally:
             pass
 
+    def to_json(self):
+        fields_data = {
+            "patient_previous_health_issues_id": self.__patient_previous_health_issues_id,
+            "fk_patient_id": self.__fk_patient_id,
+            "fk_previous_health_issues_id": self.__fk_previous_health_issues_id
+        }
+        return json.dumps(fields_data)
+
 
 class Treatments:
     def __init__(self, treatments_used_id='', treatment_name='', treatment_functionality=''):
@@ -696,6 +760,14 @@ class Treatments:
                 con.commit()
         finally:
             pass
+
+    def to_json(self):
+        fields_data = {
+            "treatments_used_id": self.__treatments_used_id,
+            "treatment_name": self.__treatment_name,
+            "treatment_functionality": self.__treatment_functionality
+        }
+        return json.dumps(fields_data)
 
 
 class TreatmentsUsedByPatient:
@@ -775,6 +847,14 @@ class TreatmentsUsedByPatient:
         finally:
             pass
 
+    def to_json(self):
+        fields_data = {
+            "treatments_used_by_patient_id": self.__treatments_used_by_patient_id,
+            "fk_patient_id": self.__fk_patient_id,
+            "fk_treatments_used_id": self.__fk_treatments_used_id
+        }
+        return json.dumps(fields_data)
+
 
 class MaskUse:
     def __int__(self, mask_use_id='', mask_type='', usage_frequency=''):
@@ -848,6 +928,14 @@ class MaskUse:
         finally:
             pass
 
+    def to_json(self):
+        fields_data = {
+            "mask_use_id": self.__mask_use_id,
+            "mask_type": self.__mask_type,
+            "usage_frequency": self.__usage_frequency
+        }
+        return json.dumps(fields_data)
+
 
 class PatientMaskUse:
     def __int__(self, patient_mask_use_id='', fk_patient_id='', fk_mask_id=''):
@@ -920,26 +1008,202 @@ class PatientMaskUse:
         finally:
             pass
 
+    def to_json(self):
+        fields_data = {
+            "patient_mask_use_id": self.__patient_mask_use_id,
+            "fk_patient_id": self.__fk_patient_id,
+            "fk_mask_id": self.__fk_mask_id
+        }
+        return json.dumps(fields_data)
+
 
 class RecentTravel:
     def __init__(self, recent_travel_id='', travel_destination='', exposure_intensity=''):
         self.__recent_travel_id = recent_travel_id
         self.__travel_destination = travel_destination
         self.__exposure_intensity = exposure_intensity
+        if recent_travel_id == "":
+            # self.__recent_travel_id = str(uuid.uuid4())
+            try:
+                config = Config()
+                con = config.db_conn
+
+                # parameterize arguments
+
+                with con.cursor() as cur:
+                    qry = 'INSERT INTO RECENT_TRAVEL (recent_travel_id, travel_destination, exposure_intensity)'
+                    qry = qry + 'VALUES(%s, %s, %s)'
+                    print(qry)
+                    cur.execute(qry, (self.__recent_travel_id, self.__travel_destination, self.__exposure_intensity))
+                    con.commit()
+            finally:
+                pass
+        else:
+            # Get
+            self.__recent_travel_id = recent_travel_id
+            try:
+                config = Config()
+                con = config.db_conn
+                with con.cursor() as cur:
+                    qry = "SELECT * FROM RECENT_TRAVEL  WHERE recent_travel_id = '" + recent_travel_id + "'"
+                    print(qry)
+                    cur.execute(qry)
+                    rows = cur.fetchall()
+                    for row in rows:
+                        self.__recent_travel_id = row["recent_travel_id"]
+                        self.__travel_destination = row["travel_destination"]
+                        self.__exposure_intensity = row["exposure_intensity"]
+            finally:
+                con.close()
 
     def get_travel_destination(self):
         return self.__travel_destination
 
     def set_travel_destination(self, travel_destination):
-        pass
+        self.__travel_destination = travel_destination
+        try:
+            config = Config()
+            con = config.db_conn
+            with con.cursor() as cur:
+                qry = 'UPDATE RECENT_TRAVEL SET travel_destination = %s WHERE recent_travel_id = %s;'
+                print(qry)
+                cur.execute(qry, (self.__travel_destination, self.__recent_travel_id))
+                con.commit()
+        finally:
+            pass
 
     def get_exposure_intensity(self):
         return self.__exposure_intensity
 
     def set_exposure_intensity(self, exposure_intensity):
-        pass
+        self.__exposure_intensity = exposure_intensity
+        try:
+            config = Config()
+            con = config.db_conn
+            with con.cursor() as cur:
+                qry = 'UPDATE RECENT_TRAVEL SET exposure_intensity = %s WHERE recent_travel_id = %s;'
+                print(qry)
+                cur.execute(qry, (self.__exposure_intensity, self.__recent_travel_id))
+                con.commit()
+        finally:
+            pass
+
+    def to_json(self):
+        fields_data = {
+            "recent_travel_id": self.__recent_travel_id,
+            "travel_destination": self.__travel_destination,
+            "exposure_intensity": self.__exposure_intensity
+        }
+        return json.dumps(fields_data)
 
 
-class PatientRecentTravel:
-    def __init__(self):
-        pass
+class PatientRecentTravel::
+    def __init__(self, patient_recent_travel_id='', fk_patient_id='', fk_recent_travel=''):
+        self.__fk_patient_id = fk_patient_id
+        self.__fk_recent_travel = fk_recent_travel
+        if patient_recent_travel_id == "":
+            # self.__patient_recent_travel_id = str(uuid.uuid4())
+            try:
+                config = Config()
+                con = config.db_conn
+
+                # parameterize arguments
+
+                with con.cursor() as cur:
+                    qry = 'INSERT INTO PATIENT_RECENT_TRAVEL (patient_recent_travel_id, ' \
+                          'fk_patient_id, fk_recent_travel)'
+                    qry = qry + 'VALUES(%s, %s, %s)'
+                    print(qry)
+                    cur.execute(qry, (self.__patient_recent_travel_id, self.__fk_patient_id, self.__fk_recent_travel))
+                    con.commit()
+            finally:
+                pass
+        else:
+            # Get
+            self.__patient_recent_travel_id = patient_recent_travel_id
+            try:
+                config = Config()
+                con = config.db_conn
+                with con.cursor() as cur:
+                    qry = "SELECT * FROM PATIENT_RECENT_TRAVEL WHERE patient_recent_travel_id = '" \
+                          + patient_recent_travel_id + "'"
+                    print(qry)
+                    cur.execute(qry)
+                    rows = cur.fetchall()
+                    for row in rows:
+                        self.__patient_recent_travel_id = row["patient_recent_travel_id"]
+                        self.__fk_patient_id = row["fk_patient_id"]
+                        self.__fk_recent_travel = row["fk_recent_travel"]
+            finally:
+                con.close()
+
+    def get_fk_patient_id(self):
+        return self.__fk_patient_id
+
+    def set_fk_patient_id(self, fk_patient_id):
+        self.__fk_patient_id = fk_patient_id
+        try:
+            config = Config()
+            con = config.db_conn
+            with con.cursor() as cur:
+                qry = 'UPDATE PATIENT_RECENT_TRAVEL SET fk_patient_id = %s WHERE patient_recent_travel_id = %s;'
+                print(qry)
+                cur.execute(qry, (self.__fk_patient_id, self.__patient_recent_travel_id))
+                con.commit()
+        finally:
+            pass
+
+    def get_fk_recent_travel(self):
+        return self.__fk_recent_travel
+
+    def set_fk_recent_travel(self, fk_recent_travel):
+        self.__fk_recent_travel = fk_recent_travel
+        try:
+            config = Config()
+            con = config.db_conn
+            with con.cursor() as cur:
+                qry = 'UPDATE PATIENT_RECENT_TRAVEL SET fk_recent_travel = %s WHERE patient_recent_travel_id = %s;'
+                print(qry)
+                cur.execute(qry, (self.__fk_recent_travel, self.__patient_recent_travel_id))
+                con.commit()
+        finally:
+            pass
+
+    def to_json(self):
+        fields_data = {
+            "patient_recent_travel_id": self.__patient_recent_travel_id,
+            "fk_patient_id": self.__fk_patient_id,
+            "fk_recent_travel": self.__fk_recent_travel
+        }
+        return json.dumps(fields_data)
+
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    country = Country()
+    location = Locationz()
+    duration = Duration()
+    month_affected = MonthAffected()
+    patient = Patient(patient_id='1')
+    symptoms = Symptoms()
+    phi = PreviousHealthIssues()
+    pphi = PatientPreviousHealthIssues()
+    treatments = Treatments()
+    tubp = TreatmentsUsedByPatient()
+    mask_use = MaskUse()
+    pmu = PatientMaskUse()
+    recent_travel = RecentTravel()
+    prt =PatientRecentTravel()
+
+    dict = {
+        "patient": (patient.get_patient_name(), patient.get_age(), patient.get_patient_id),
+        "Doctor": (doc.get_first_name(), doc.get_last_name(), doc.get_doctor_id()),
+        "Visit 1": visit.to_json(),
+        "Visit 2": visit2.to_json()
+    }
+
+    return json.dumps(dict)
+
+# app.run()
