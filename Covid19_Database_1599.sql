@@ -14,7 +14,7 @@ USE sot18;
 -- ------------------------------------------------------------------------
 CREATE TABLE country (
 country_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-country_name VARCHAR (45) NOT NULL);
+country_name VARCHAR (45) NOT NULL) ENGINE = InnoDB;
 
 INSERT into country (country_id,country_name) VALUES
 ('1','United States'),
@@ -38,7 +38,7 @@ INSERT into country (country_id,country_name) VALUES
   PRIMARY KEY (`location_id`),
   CONSTRAINT `SDHFSJDFH`
   FOREIGN KEY (`location_id`)
-  REFERENCES `country` (`country_id`));
+  REFERENCES `country` (`country_id`)) Engine = InnoDB;
   
 INSERT into LOCATIONZ (location_id,location_name,location_state,fk_country_id) values 
 ('1','Allegheny','Pittsburgh','1'),
@@ -58,7 +58,7 @@ INSERT into LOCATIONZ (location_id,location_name,location_state,fk_country_id) v
 CREATE TABLE month_affected(
 month_affected_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 Month_affected VARCHAR(45) NOT NULL,
-year_affected INT NOT NULL);
+year_affected INT NOT NULL) Engine = InnoDB;
 
 INSERT into month_affected (month_affected_id, Month_affected, year_affected) values
 ('1', 'December', '2019'),
@@ -80,7 +80,7 @@ INSERT into month_affected (month_affected_id, Month_affected, year_affected) va
 -- ------------------------------------------------------------------------
 CREATE TABLE duration(
 duration_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-duration_length_in_days INT NOT NULL);
+duration_length_in_days INT NOT NULL) Engine = InnoDB;
 
 INSERT INTO duration(duration_id, duration_length_in_days) values
 ('1','13'),
@@ -113,7 +113,7 @@ CREATE TABLE Patient(
     REFERENCES `month_affected` (`month_affected_id`),
     constraint `ghjgj`
     FOREIGN KEY(`PATIENT_ID`)
-    REFERENCES `duration` (`DURATION_ID`));
+    REFERENCES `duration` (`DURATION_ID`)) Engine = InnoDB;
     
   
 INSERT into Patient (patient_id,patient_name, Age,fk_month_affected_id,fk_location_id, fk_duration_id ) values 
@@ -134,7 +134,7 @@ INSERT into Patient (patient_id,patient_name, Age,fk_month_affected_id,fk_locati
   CREATE TABLE SYMPTOMS(
   `symptoms_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `symptom_name` VARCHAR(45) NOT NULL
-  );
+  ) Engine = InnoDB;
   
   INSERT into SYMPTOMS (symptoms_id, symptom_name) values
   ('1', 'Cough'),
@@ -167,7 +167,7 @@ INSERT into Patient (patient_id,patient_name, Age,fk_month_affected_id,fk_locati
     REFERENCES `Patient` (`patient_id`),
   CONSTRAINT `hjhj`
     FOREIGN KEY (`fk_symptoms_id`)
-    REFERENCES `SYMPTOMS` (`symptoms_id`));
+    REFERENCES `SYMPTOMS` (`symptoms_id`)) Engine = InnoDB;
   
    INSERT into PATIENT_SYMPTOMS (patient_symptoms_id, fk_patient_id, fk_symptoms_id) values
    ('1','2','1'),
@@ -219,7 +219,7 @@ INSERT into Patient (patient_id,patient_name, Age,fk_month_affected_id,fk_locati
 -- ------------------------------------------------------------------------
 CREATE TABLE previous_health_issues(
 `health_issues_id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-`health_issue_name` VARCHAR(45) NOT NULL);
+`health_issue_name` VARCHAR(45) NOT NULL) Engine = InnoDB;
 
 INSERT into previous_health_issues (health_issues_id,health_issue_name) VALUES
 ('1','Asthma'),
@@ -249,7 +249,7 @@ fk_previous_health_issues_id INT NOT NULL,
     REFERENCES `Patient` (`patient_id`),
   CONSTRAINT `hjhjk`
     FOREIGN KEY (`fk_previous_health_issues_id`)
-    REFERENCES `previous_health_issues` (`health_issues_id`));
+    REFERENCES `previous_health_issues` (`health_issues_id`)) Engine = InnoDB;
 
 INSERT into patient_previous_health_issues (patient_previous_health_issues_id,fk_patient_id,fk_previous_health_issues_id) VALUES
 ('1','2','11'),
@@ -270,7 +270,7 @@ INSERT into patient_previous_health_issues (patient_previous_health_issues_id,fk
 CREATE TABLE Treatments (
 treatments_used_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 treatment_name VARCHAR(60) NOT NULL,
-treatment_functionality VARCHAR (90) NOT NULL);
+treatment_functionality VARCHAR (90) NOT NULL) Engine = InnoDB;
 
 INSERT into Treatments (treatments_used_id, treatment_name, treatment_functionality) VALUES
 ('1','Tylenol','cough and cold. Helps with headaches and fever as well'),
@@ -300,7 +300,7 @@ INDEX `gjhjlas_idx` (`fk_patient_id` ASC) VISIBLE,
     REFERENCES `Patient` (`patient_id`),
   CONSTRAINT `hjhjkas`
     FOREIGN KEY (`fk_Treatments_used_id`)
-    REFERENCES `Treatments` (`treatments_used_id`));
+    REFERENCES `Treatments` (`treatments_used_id`))Engine = InnoDB;
 
 INSERT into Treatments_used_by_patient(Treatments_used_by_patient_id, fk_patient_id,fk_Treatments_used_id) VALUES
 ('1','1','3'),
@@ -319,7 +319,7 @@ CREATE TABLE MASK_USE(
 MASK_USE_ID INT NOT NULL PRIMARY KEY,
 MASK_TYPE VARCHAR(20) NOT NULL,
 USAGE_FREQUENCY VARCHAR(20) NOT NULL
-);
+)Engine = InnoDB;
 
 INSERT INTO MASK_USE (MASK_USE_ID,MASK_TYPE, USAGE_FREQUENCY) VALUES
 (1, 'Cloth', 'rare'),
@@ -335,7 +335,7 @@ fk_patient_id int not null,
 fk_mask_id int not null,
 FOREIGN KEY(fk_patient_id) references Patient(patient_id),
 FOREIGN KEY(fk_mask_id) references MASK_USE(mask_use_id)
-);
+) Engine = InnoDB;
 
 INSERT INTO PATIENT_MASK_USE (PATIENT_MASK_USE_ID,FK_PATIENT_ID, FK_MASK_ID) VALUES
 (1, 5, 5),
@@ -349,7 +349,7 @@ CREATE TABLE RECENT_TRAVEL (
 recent_travel_id int not null primary key,
 travel_destination varchar(50) not null,
 exposure_intensity varchar(50) not null
-);
+) Engine = InnoDB;
 
 INSERT INTO RECENT_TRAVEL(recent_travel_id, travel_destination, exposure_intensity) values
 (1, 'India', 'Medium'),
@@ -365,7 +365,7 @@ fk_patient_id int not null,
 fk_recent_travel int not null,
 foreign key(fk_patient_id) references Patient(patient_id),
 foreign key(fk_recent_travel) references RECENT_TRAVEL(recent_travel_id)
-);
+) Engine = InnoDB;
 
 INSERT INTO PATIENT_RECENT_TRAVEL(patient_recent_travel_id, fk_patient_id, fk_recent_travel) values
 (1, 1, 4),
